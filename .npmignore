@@ -1,0 +1,17 @@
+# 第三方内容：原文副本与中文机翻都不随包分发（只在本地生成）
+skill/sources/core/
+skill/sources/zh/
+skill/sources/_out/
+skill/sources/_queue/
+skill/sources/_scratch/
+skill/sources/REPORT.md
+corpus/
+
+# 开发用
+tests/
+eval/
+scripts/
+*.log
+__pycache__/
+*.pyc
+.DS_Store

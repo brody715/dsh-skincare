@@ -1,0 +1,98 @@
+{
+  "name": "@brody715/dsh-skincare",
+  "version": "0.2.0",
+  "description": "有出处的护肤知识库与分诊助手：中文知识模块随包分发，自带学习路径、皮肤档案和 dsh-go 原生面板",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./skill/*": "./skill/*",
+    "./package.json": "./package.json"
+  },
+  "icon": "./icon.svg",
+  "files": [
+    "lib/index.js",
+    "lib/skill.js",
+    "lib/panel.js",
+    "skill/SKILL.md",
+    "skill/references",
+    "skill/agents",
+    "skill/scripts/lookup.py",
+    "skill/scripts/profile.py",
+    "skill/scripts/fetch_sources.py",
+    "skill/sources/index.jsonl",
+    "skill/sources/topics.json",
+    "cordis.patch.yml",
+    "icon.svg",
+    "docs",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSE",
+    "ATTRIBUTION.md"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "skill",
+    "skin-care",
+    "dsh-go",
+    "dsh-bundle"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brody715/dsh-skincare.git",
+    "directory": "."
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.1-rc.2 <0.3.0-0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dshGo": {
+    "v": 1,
+    "title": {
+      "zh": "护肤",
+      "en": "Skin Care"
+    },
+    "icon": "heart",
+    "contributes": {
+      "composer.actions": [
+        {
+          "id": "skin-care-ask",
+          "label": {
+            "zh": "今天怎么护肤",
+            "en": "Today"
+          },
+          "icon": "heart"
+        }
+      ],
+      "panels": [
+        {
+          "id": "skin-care-panel",
+          "title": {
+            "zh": "护肤",
+            "en": "Skin Care"
+          },
+          "icon": "heart",
+          "placement": [
+            "session.tab",
+            "features"
+          ]
+        }
+      ]
+    }
+  }
+}

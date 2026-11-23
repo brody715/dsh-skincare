@@ -1,0 +1,27 @@
+node_modules/
+.DS_Store
+*.log
+dist/
+.test-tmp/
+
+# 运行数据（皮肤档案等用户数据，不入库）
+skill/state/
+local/
+
+# 评测输出
+eval/out/
+
+# Python
+__pycache__/
+*.pyc
+
+# 语料：AAD 原文副本与中文机翻都不随包/不入库，只在本地生成
+# skill/sources/index.jsonl 只含元数据，照常入库。
+corpus/
+skill/sources/core/
+skill/sources/zh/
+skill/sources/_out/
+skill/sources/_queue/
+skill/sources/_scratch/
+skill/sources/REPORT.md
+skill/sources/STATS.json
