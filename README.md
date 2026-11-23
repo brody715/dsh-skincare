@@ -34,16 +34,16 @@
 
 ## 装
 
-需要 DSH 宿主（`dsh` 命令可用）。
+需要 DSH 宿主（`dsh` 命令可用）。包在 npm 上：`@brody715/dsh-skincare`。
 
 ```sh
-git clone https://github.com/brody715/dsh-skincare.git
+dsh plugin --profile web add @brody715/dsh-skincare
 ```
 
-然后在任意 DSH 会话里说一句「装这个插件：`/绝对路径/dsh-skincare`」，或者直接让 Host 调
-`plugin_manager` 的 `install_bundle`，`target` 指向这个目录。安装会读 `package.json` 里的
-`dsh.bundle.patch`，把 `cordis.patch.yml` 里的 `insert` 项并进 profile；插件名是
-`@brody715/dsh-skincare`。
+不想用命令行，也可以在会话里让 Host 调 `plugin_manager` 的 `install_bundle`，`target` 直接填包名
+`@brody715/dsh-skincare`；想装本地改动版就 `git clone https://github.com/brody715/dsh-skincare.git`
+后把 `target` 换成目录绝对路径。安装会读 `package.json` 里的 `dsh.bundle.patch`，把
+`cordis.patch.yml` 里的 `insert` 项并进 profile；插件名是 `@brody715/dsh-skincare`。
 
 **别手写 profile 的 `package.json` / `cordis.patch.yml`，也别在 `$DSH_HOME` 里 `pnpm add`，**
 那些地方由宿主管理。卸载用同一个工具的 `remove_bundle`。

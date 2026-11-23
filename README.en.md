@@ -38,14 +38,15 @@ A good outcome might be **buying two fewer products** — or **booking a dermato
 
 ## Install
 
-Requires a DSH host (the `dsh` command).
+Requires a DSH host (the `dsh` command). The package is on npm: `@brody715/dsh-skincare`.
 
 ```sh
-git clone https://github.com/brody715/dsh-skincare.git
+dsh plugin --profile web add @brody715/dsh-skincare
 ```
 
-Then, in any DSH session, ask it to install this plugin from that absolute path, or have the host call
-`plugin_manager` with `install_bundle` and `target` pointing at the directory. Installation reads
+Without the CLI, have the host call `plugin_manager` with `install_bundle` and `target` set to the
+package name `@brody715/dsh-skincare`; to install a local working copy instead, clone
+`https://github.com/brody715/dsh-skincare.git` and point `target` at that directory. Installation reads
 `dsh.bundle.patch` from `package.json` and merges the `insert` entries of `cordis.patch.yml` into the
 profile; the plugin name is `@brody715/dsh-skincare`.
 
