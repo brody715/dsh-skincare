@@ -1,122 +1,83 @@
-English | [中文](README.md)
+English | [中文](<README.md>)
 
 # DSH Skin Care
 
-A **DeepSeek Harness (DSH) plugin package** that turns the American Academy of Dermatology's (AAD) public
-skin-care guidance into a skill you can *look up in, learn from, be assessed by, and track with* — shipped
-with the plugin.
+An **agent-native skin-care domain package for DeepSeek Harness (DSH)**. It equips the existing host agent with Chinese knowledge modules, AAD source metadata, evidence-checking methods and medical safety boundaries—not a new persona or a separate assistant.
 
-Install the plugin and the `dsh-skincare` skill is simply there; nothing to copy into `~/.dsh/skills`.
-The same package also carries an optional native panel for the dsh-go phone app — that part is secondary,
-and its absence changes nothing.
+The plugin provides the `dsh-skincare` skill without manually copying a skill directory. An optional dsh-go native panel offers lightweight knowledge navigation and conversation entry points; the skill works without it.
 
-```
-package root
-├─ lib/            plugin entry (Cordis plugin: registers the skill provider, plus the optional panel)
-├─ skill/          the skill: SKILL.md, 13 knowledge modules, expert roles, source index, scripts
-├─ cordis.patch.yml  install patch
-├─ icon.svg
-├─ docs/           design notes, panel reference, research
-├─ scripts/        maintenance scripts (corpus mining; local only, not shipped)
-└─ THIRD_PARTY_NOTICES.md  third-party content boundary (what is not shipped, and why)
-```
+## What it helps with
 
-## What it is for
+Start from the user's question: explain cleansing, moisturizing, sunscreen and skin-health concepts; examine claims and sources; discuss a routine, learning topics or visit preparation. Clarify, read or search when useful, rather than routing every request through fixed modes.
 
-Skin care does not lack information; it lacks **judgement**. Marketing blends "basic maintenance / problem
-solving / medical boundary" into one blur, and the most profitable words are always "repair" and "fade".
+No mandatory assessment, profile, check-in or course completion. No requirement to reduce steps, cite every sentence or keep a fixed word count. Facts must be checkable, and evidence, inference and uncertainty must remain distinct. Method references do not switch the agent's identity.
 
-This project does exactly four things:
+## Install: DSH-first
 
-1. **Look up** — every factual claim carries an AAD citation you can open.
-2. **Learn** — a staged L0→L3 path, 3–5 minutes per lesson, with self-checks.
-3. **Assess** — your current knowledge stage, routine complexity, and whether a complaint is self-care or
-   a doctor visit.
-4. **Track** — goals broken into checkable behaviours, reviewed weekly.
-
-A good outcome might be **buying two fewer products** — or **booking a dermatologist**.
-
-## Install
-
-Requires a DSH host (the `dsh` command). The package is on npm: `@brody715/dsh-skincare`.
+Use a DSH and Node.js host meeting the requirements in the [package manifest](<package.json>). The npm package name is `@brody715/dsh-skincare`:
 
 ```sh
 dsh plugin --profile web add @brody715/dsh-skincare
 ```
 
-Without the CLI, have the host call `plugin_manager` with `install_bundle` and `target` set to the
-package name `@brody715/dsh-skincare`; to install a local working copy instead, clone
-`https://github.com/brody715/dsh-skincare.git` and point `target` at that directory. Installation reads
-`dsh.bundle.patch` from `package.json` and merges the `insert` entries of `cordis.patch.yml` into the
-profile; the plugin name is `@brody715/dsh-skincare`.
-
-**Do not hand-edit the profile's `package.json` / `cordis.patch.yml`, and do not `pnpm add` inside
-`$DSH_HOME`** — the host owns those. Uninstall with the same tool's `remove_bundle`.
-
-Verify the skill arrived: open a new session and ask a skin-care question, or check the session's skill
-catalog for `dsh-skincare`.
-
-> If you previously installed the skill by hand at `~/.dsh/skills/dsh-skincare`, that copy still wins
-> (user layer 400 ranks ahead of bundled 600). No conflict — it is the same content. Delete that directory
-> if you want only the packaged copy.
-
-The dsh-go native panel is documented in [docs/panel.md](docs/panel.md) (same package, nothing extra to install).
-
-## Boundaries
-
-- Science education and triage support — **not a diagnosis, not a prescription**.
-- No product reviews, no price comparison, no affiliate links.
-- Red-flag symptoms (`skill/references/10-何时就医.md`) lead straight to "see a doctor", with no
-  self-treatment plan.
-- Any skin condition should ultimately be seen by a licensed dermatologist.
-
-## Where the knowledge comes from
-
-Three layers, with a clear boundary:
-
-| Layer | Where | Shipped | Purpose |
-| --- | --- | --- | --- |
-| Chinese knowledge modules | `skill/references/*.md` | yes | the answer body: mechanisms, numbers, triage rules, common mistakes |
-| Source index (metadata only) | `skill/sources/index.jsonl` | yes | one line per page: `slug / url / title / section`, used to validate citations and fetch URLs |
-| AAD page copies and translations | generated locally | **no** | for verification. Third-party content, not redistributable |
-
-The index holds links and titles — no body text, no translation. Modules are checked against the original
-pages by URL when needed (English original is fine):
+The CLI command adds a dependency; it alone is not proof of bundle registration. Prefer asking the host to call `plugin_manager` with `install_bundle` and that package name as `target` to install and register the bundle. To test a local working copy, clone the repository and use its absolute directory as `target`:
 
 ```sh
-python3 skill/scripts/lookup.py --url acne          # get the original URL for a page
-python3 skill/scripts/lookup.py "sunscreen stick"   # search the index for a slug
+git clone https://github.com/brody715/dsh-skincare.git
 ```
 
-If you generated page copies locally (`skill/sources/core/`) or machine translations (`corpus/`),
-`--read <slug>` prints the body directly; when neither exists it prints the title and original URL so you
-can read it yourself. Rationale: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The host reads `dsh.bundle.patch` from the [manifest](<package.json>) and loads the [install patch](<cordis.patch.yml>). Do not hand-edit host profile dependencies or patches, or run `pnpm add` inside `$DSH_HOME`. Uninstall through the host's `remove_bundle`.
 
-## Sources and copyright
+Check the session skill catalog for `dsh-skincare`, opening a new session if needed. An older manually installed skill may shadow the bundled copy: inspect it before deciding to remove it, and do not assume their contents match.
 
-Knowledge is based on AAD public pages (`aad.org/public/...`); citations carry the slug and original URL.
-**AAD content is copyright AAD**: this project does not copy, translate or redistribute its body text —
-it references links and facts, and is neither licensed nor endorsed by AAD.
+**Repository changes are not proof of publication or deployment.** npm installs the published release. To verify this working copy, install its local directory through the host and inspect what actually loads. This document does not claim installation, an update or panel verification has completed on the current host.
 
-The Chinese modules are written by this project, not translated from AAD: mechanisms and numbers are
-sourced, while wording, structure and triage rules are rewritten here. Boundary details (what is not
-shipped, and why): [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); full provenance and use terms:
-[ATTRIBUTION.md](ATTRIBUTION.md).
+## Knowledge and evidence
 
-## Development
+- **13 Chinese modules** cover foundations, cleansing, moisturizing, sun protection, skin types, irritation, acne, marks and pigmentation, inflammatory conditions, labels, medical care, learning topics and photoaging. See the [skill entry](<skill/SKILL.md>).
+- **Linked knowledge navigation**: the [concept map](<skill/knowledge-map.md>) and named module relationships explain where and why to continue reading. Search provides an entry point; the agent follows mechanisms, conditions, exceptions and evidence rather than retrieving a complete answer in one query.
+- The [source index](<skill/sources/index.jsonl>) and [topic index](<skill/sources/topics.json>) contain metadata, including links and titles—not AAD article bodies or machine translations.
+- Prefer the host's existing web-reading or search tools to check originals. If unavailable, disclose that limitation instead of presenting local notes as freshly verified source text.
 
-Zero build, zero dependencies: `lib/` is plain ESM and takes effect directly in the host (manifest edits
-reload automatically, code edits need an engine restart).
+From the repository root:
 
 ```sh
-node --test tests/smoke.mjs               # plugin entry + skill provider smoke tests
-python3 skill/scripts/lookup.py --audit   # validate every [s:slug] citation in the knowledge modules
-python3 eval/run.py                       # evaluation cases
+node skill/scripts/lookup.mjs "sunscreen stick"
+node skill/scripts/lookup.mjs --url <slug-or-fragment>
+node skill/scripts/lookup.mjs --check <slug-or-fragment>
+node skill/scripts/lookup.mjs --read <slug-or-fragment>
+node skill/scripts/lookup.mjs --audit
 ```
 
-Design notes: [docs/design.md](docs/design.md). Acceptance evidence: [eval/rubric.md](eval/rubric.md).
-"With skill vs plain chat" comparison: [eval/ab-v0.1.md](eval/ab-v0.1.md).
+Use `--references --json --limit 5` for bounded paragraph search with section and line ranges. `--read` returns metadata and the original URL only; it does not read cached bodies or access the network. Use host web tools to check originals. Related claims may share a citation when its scope is clear; never invent slugs or confuse an index match with reading a source.
 
-## License
+## Continuity without another profile system
 
-Code is MIT ([LICENSE](LICENSE)). Text content terms are in [ATTRIBUTION.md](ATTRIBUTION.md).
+Reuse the Harness host's existing memory policies and tools without requiring a particular memory service. Do not write every turn or infer mastery because the assistant explained something. Without host memory, use the conversation, or provide a summary when requested; do not create replacement storage.
+
+Only when the user explicitly requests their old profile, use the read-only compatibility command:
+
+```sh
+node skill/scripts/legacy-profile.mjs show --confirm-user-request --json
+```
+
+It reads the old `~/.dsh/skin-care/profile.json`; it does not automatically read, write, create or migrate it. Historical records are not current diagnoses or evidence of mastery. The optional Go panel does not use that profile or maintain check-ins, levels or course-completion state. See the [panel reference](<docs/panel.md>).
+
+## Medical and copyright boundaries
+
+Education and risk support—**not diagnosis or prescribing**. No lesion diagnosis, disease scoring, cosmetic-procedure decisions, brand rankings, price comparisons or sales recommendations. Urgent warning signs take priority over skin-care experimentation; see the [medical-care reference](<skill/references/10-何时就医.md>).
+
+Knowledge primarily draws on [AAD public education](https://www.aad.org/public). AAD owns its content. The package distributes neither original articles nor machine translations and implies no AAD authorization or endorsement. The Chinese modules are independently organized notes, not article translations. See [third-party notices](<THIRD_PARTY_NOTICES.md>) and [attribution and text terms](<ATTRIBUTION.md>).
+
+## Development and design
+
+The published runtime is JavaScript/Node.js. Maintainer corpus tooling and historical evaluation scripts may still use Python; this is not a claim that the entire repository is Python-free. Optional methods cover [clarification](<skill/agents/assessor.md>), [learning support](<skill/agents/coach.md>), [routine discussion](<skill/agents/routine-review.md>) and [visit preparation](<skill/agents/visit-prep.md>); none is a separate agent.
+
+```sh
+node --test tests/*.mjs
+node skill/scripts/lookup.mjs --audit
+```
+
+See the [design document](<docs/design.md>) for architecture. Knowledge review, retrieval regressions and clean-context agent trials are recorded in the [reliability review](<eval/reliability-review.md>) (repository-only). The [behavioral cases](<eval/agent-native.md>) guide continued regression testing; cross-model comparisons and real learner outcomes remain untested.
+
+Code: [MIT](<LICENSE>). Text terms: [ATTRIBUTION](<ATTRIBUTION.md>).

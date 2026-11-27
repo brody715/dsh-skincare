@@ -11,8 +11,7 @@
 
 ## 2. 中文知识模块（Skill 正文）
 
-`skill/SKILL.md`、`skill/references/`、`skill/agents/`、`docs/` 是为本项目原创的中文写作：MIT 之外，
-这些文档同样以 MIT 授权，可自由引用、修改、再分发，保留出处即可。
+`skill/SKILL.md`、`skill/references/`、`skill/agents/` 的许可按 `ATTRIBUTION.md` 为 CC BY-SA 4.0；代码与 `docs/` 为 MIT。此处纠正此前与 ATTRIBUTION 不一致的表述，不改变第三方内容的权利归属。
 
 写作口径：**知识依据**来自公开科普页面的机制与数值，表述、结构、例子、分诊口径由本项目重写。
 不逐句翻译，也不整段转述原文。
@@ -39,10 +38,9 @@ id  slug  url  title  section  words  kind  in_scope
 | `skill/sources/core/` | 来源站点的英文正文副本 | 版权属原站点，未经授权不得再分发 |
 | `corpus/` | 上述正文的中文机器翻译 + 索引 | 演绎作品，同样不可再分发 |
 
-两者都由使用者在本机按需生成（公开仓库里的抓取脚本），生成物被 `.gitignore` 排除。
-技能运行时也不依赖它们：需要原文时，按 `index.jsonl` 里的 `url` 现场打开（英文即可），
-或用 `skill/scripts/lookup.py --url <slug>` 取地址。知识模块本身已经把可执行的结论写全，
-读原文是核对，不是必需前置。
+本地已有副本被 `.gitignore` 排除，插件不自动读取或生成它们。
+需要原文时，用 `node skill/scripts/lookup.mjs --url <slug>` 获取地址，再通过宿主网页工具或浏览器核对。
+来源不可访问时说明未能核验；模块没有覆盖或证据不充分的结论不得自动补全。
 
 ## 5. 名称与商标
 

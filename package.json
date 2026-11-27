@@ -1,7 +1,7 @@
 {
   "name": "@brody715/dsh-skincare",
-  "version": "0.2.0",
-  "description": "有出处的护肤知识库与分诊助手：中文知识模块随包分发，自带学习路径、皮肤档案和 dsh-go 原生面板",
+  "version": "0.3.0",
+  "description": "有出处的护肤专家与学习能力包：按需检索中文知识、核对来源，复用宿主助手与记忆，可选 dsh-go 入口",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -16,16 +16,19 @@
     "lib/skill.js",
     "lib/panel.js",
     "skill/SKILL.md",
+    "skill/knowledge-map.md",
     "skill/references",
     "skill/agents",
-    "skill/scripts/lookup.py",
-    "skill/scripts/profile.py",
-    "skill/scripts/fetch_sources.py",
+    "skill/scripts/lookup.mjs",
+    "skill/scripts/legacy-profile.mjs",
+    "skill/scripts/read-bounded.mjs",
     "skill/sources/index.jsonl",
     "skill/sources/topics.json",
     "cordis.patch.yml",
     "icon.svg",
-    "docs",
+    "docs/design.md",
+    "docs/panel.md",
+    "docs/writing-guide.md",
     "README.md",
     "README.en.md",
     "CHANGELOG.md",
@@ -69,16 +72,6 @@
     },
     "icon": "heart",
     "contributes": {
-      "composer.actions": [
-        {
-          "id": "skin-care-ask",
-          "label": {
-            "zh": "今天怎么护肤",
-            "en": "Today"
-          },
-          "icon": "heart"
-        }
-      ],
       "panels": [
         {
           "id": "skin-care-panel",
@@ -88,7 +81,6 @@
           },
           "icon": "heart",
           "placement": [
-            "session.tab",
             "features"
           ]
         }
