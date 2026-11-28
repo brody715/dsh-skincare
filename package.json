@@ -1,6 +1,6 @@
 {
   "name": "@brody715/dsh-skincare",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "有出处的护肤专家与学习能力包：按需检索中文知识、核对来源，复用宿主助手与记忆，可选 dsh-go 入口",
   "type": "module",
   "main": "lib/index.js",

@@ -86,7 +86,7 @@ function termsFor(query) {
   while (rest) {
     // Numeric units are one literal search term; typography (3 分钟 / 3分钟)
     // must not change retrieval, and this does not equate different time units.
-    const measurement = /^\d+(?:\.\d+)?\s*(?:分钟|小时|个月|天|周|月|次|%)/u.exec(rest)?.[0]
+    const measurement = rest.match(/^\d+(?:\.\d+)?\s*(?:分钟|小时|个月|天|周|月|次|%)/u)?.[0]
     if (measurement) { tokens.push(measurement.replace(/\s+/g, '')); rest = rest.slice(measurement.length); continue }
     const word = vocabulary.find(w => rest.startsWith(w))
     if (word) { tokens.push(word); rest = rest.slice(word.length); continue }
@@ -109,7 +109,7 @@ function termsFor(query) {
     related: [...new Set(units.flatMap(u => RELATED[u.alternatives[0]] || []))] }
 }
 function hasTerm(text, term) {
-  const numeric = /^(\d+(?:\.\d+)?)(分钟|小时|个月|天|周|月|次|%)$/u.exec(term)
+  const numeric = term.match(/^(\d+(?:\.\d+)?)(分钟|小时|个月|天|周|月|次|%)$/u)
   if (numeric) return new RegExp('(?<![\\d.])' + numeric[1].replace(/\./g, '\\.') + numeric[2]).test(text)
   return text.includes(term)
 }
@@ -130,7 +130,7 @@ function excerpt(text, terms, lineStart) {
   const needles = [...terms.exact, ...terms.units.flatMap(u => u.alternatives).filter(t => t.length >= 2)]
   const positions = [0]
   for (const needle of needles) {
-    const numeric = /^(\d+(?:\.\d+)?)(分钟|小时|个月|天|周|月|次|%)$/u.exec(needle)
+    const numeric = needle.match(/^(\d+(?:\.\d+)?)(分钟|小时|个月|天|周|月|次|%)$/u)
     if (numeric) for (const match of lower.matchAll(new RegExp(numeric[1].replace(/\./g, '\\.') + '\\s*' + numeric[2], 'g'))) positions.push(Math.max(0, match.index - 60))
     let p = lower.indexOf(needle)
     while (p >= 0) { positions.push(Math.max(0, p - 60)); p = lower.indexOf(needle, p + needle.length) }
@@ -163,7 +163,7 @@ export function searchReferences(query, { root = SKILL_DIR, rows = loadIndex(roo
         const leaf = headings.at(-1) || ''
         const headingDensity = Math.min(1, 12 / Math.max(1, leaf.length))
         const primaryHeading = leaf.split(/[，：:]/u)[0]
-        const inlineHeading = /^\*\*([^*]+)\*\*/u.exec(text)?.[1] || ''
+        const inlineHeading = text.match(/^\*\*([^*]+)\*\*/u)?.[1] || ''
         const headingScore = (scoreText(primaryHeading, terms) * 0.65 + scoreText(leaf, terms) * 0.15) * headingDensity + scoreText(headings.slice(0, -1).join(' '), terms) * 0.2 + scoreText(inlineHeading, terms) * 0.8
         // A matching concept's introduction should precede incidental examples.
         // The parent heading supplies context for headings such as 三种作用机制.
@@ -180,7 +180,7 @@ export function searchReferences(query, { root = SKILL_DIR, rows = loadIndex(roo
       start = -1
     }
     lines.forEach((line, i) => {
-      const h = /^(#{1,6})\s+(.+)$/.exec(line)
+      const h = line.match(/^(#{1,6})\s+(.+)$/)
       if (h) { flush(i); sectionParagraphIndex = 0; headings = headings.slice(0, h[1].length - 1); headings[h[1].length - 1] = h[2]; return }
       if (!line.trim()) { flush(i); return }
       // List items and table rows are separate citation units: do not borrow

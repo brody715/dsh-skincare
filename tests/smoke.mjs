@@ -49,6 +49,21 @@ test('Go is stateless, secondary, and only inserts drafts', () => {
   assert.deepEqual(pkg.dshGo.contributes.panels[0].placement, ['features'])
 })
 
+test('Published runtime stays read-only and has no command execution or network APIs', () => {
+  // A small source regression check, not a sandbox or a security certification.
+  const runtime = pkg.files.filter(path => /\.[cm]?js$/.test(path))
+  assert.ok(runtime.length > 0)
+  for (const path of runtime) {
+    const source = read('../' + path)
+    assert.doesNotMatch(source, /\b(?:child_process|execSync|execFile|spawnSync|spawn)\b|\b(?:exec|system|eval)\s*\(|new\s+Function\s*\(/, path)
+    assert.doesNotMatch(source, /node:(?:vm|worker_threads|https?|http2|net|tls|dgram)|\b(?:fetch|WebSocket)\s*\(/, path)
+    assert.doesNotMatch(source, /\b(?:writeFile(?:Sync)?|appendFile(?:Sync)?|createWriteStream|mkdir(?:Sync)?|rm(?:Sync)?|unlink(?:Sync)?|rename(?:Sync)?|copyFile(?:Sync)?)\s*\(/, path)
+  }
+  for (const hook of ['preinstall', 'install', 'postinstall', 'prepare']) assert.equal(pkg.scripts?.[hook], undefined)
+  assert.deepEqual(Object.keys(pkg.dependencies ?? {}), [])
+  assert.deepEqual(Object.keys(pkg.optionalDependencies ?? {}), [])
+})
+
 test('Knowledge modules stay bounded and cited, not padded to a minimum', () => {
   const dir = new URL('../skill/references/', import.meta.url)
   const files = readdirSync(dir).filter(f => f.endsWith('.md'))
